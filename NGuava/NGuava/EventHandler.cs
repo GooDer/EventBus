@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Text;
 using System.Reflection;
-using System.Collections.Generic;
 
 namespace NGuava
 {
@@ -10,7 +8,7 @@ namespace NGuava
     /// Two EventHandlers are equavelent when they refer the same method on the same instance.
     /// The MethodInfo is a flyweight object similar to String each MethodInfo on a class is uniqueuely formed with the same hashcode.
     /// </summary>
-    public class EventHandler : IComparer<EventHandler>
+    public class EventHandler : IComparable<EventHandler>
     {
         /// <summary>
         /// The target object is the object  which the method will be invoked on.
@@ -116,12 +114,11 @@ namespace NGuava
         /// <summary>
         /// Compare method to be able to sort EventHandlers by priority
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="other"></param>
         /// <returns></returns>
-        public int Compare(EventHandler x, EventHandler y)
+        public int CompareTo(EventHandler other)
         {
-            return x.priority.CompareTo(y.priority);
+            return priority.CompareTo(other.priority);
         }
     }
 }
