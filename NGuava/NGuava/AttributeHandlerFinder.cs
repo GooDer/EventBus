@@ -20,9 +20,11 @@ namespace NGuava
             IMultiMap<Type, EventHandler> methodsInSubscriber = HashMultiMap<Type, EventHandler>.Create();
             foreach (MethodInfo method in GetMarkedMethods(subscriber))
             {
+                Subscribe attr = (Subscribe)method.GetCustomAttribute(typeof(Subscribe));
+                int priority = attr.GetPriority();
                 ParameterInfo[] parmetersTypes = method.GetParameters();
                 Type eventType = parmetersTypes[0].ParameterType;
-                EventHandler handler = new EventHandler(subscriber, method);
+                EventHandler handler = new EventHandler(subscriber, method, priority);
                 methodsInSubscriber.Add(eventType, handler);
                 
             }

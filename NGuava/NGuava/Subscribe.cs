@@ -14,6 +14,13 @@ namespace NGuava
     ///     {
     ///         Console.WriteLine(purchase.GetAmount());
     ///     }
+    ///     
+    ///     // subscribe with priority higher than default 0
+    ///     [Subscribe(10)]
+    ///     public void OnPurchase(IPurchaseEvent purchase)
+    ///     {
+    ///         Console.WriteLine(purchase.GetAmount());
+    ///     }
     /// }
     /// </example>
     /// Please notice the following:
@@ -24,5 +31,23 @@ namespace NGuava
     [System.AttributeUsage(System.AttributeTargets.Method , AllowMultiple = false)]
     public class Subscribe : Attribute
     {
+        /// <summary>
+        /// Priority of subscriber - higher priority means that event will be propagated sooner then to other with lower priority
+        /// </summary>
+        private int priority;
+
+        /// <summary>
+        /// Constructor with default priority of 0
+        /// </summary>
+        /// <param name="priority">Priority of subscriber - higher priority means that event will be propagated sooner then to other with lower priority</param>
+        public Subscribe(int priority = 0)
+        {
+            this.priority = priority;
+        }
+
+        public int GetPriority()
+        {
+            return priority;
+        }
     }
 }

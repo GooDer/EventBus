@@ -9,15 +9,14 @@ namespace NGuava
         /// <summary>
         /// This dictionary holds for each key uniqueue values with no repetitions.
         /// </summary>
-        private readonly Dictionary<K, HashSet<V>> dictionary;
-        //TODO : the HashSet can change to different data structure.
+        private readonly Dictionary<K, SortedSet<V>> dictionary;
         /// <summary>
         /// This the number of pairs (key and value) on this HashMultiMap.
         /// </summary>
         private int amountOfPairs;
         private HashMultiMap()
         {
-            dictionary = new Dictionary<K, HashSet<V>>();
+            dictionary = new Dictionary<K, SortedSet<V>>();
         }
         /// <summary>
         /// Factory of HashMultiMap.
@@ -49,7 +48,7 @@ namespace NGuava
             Boolean isContains = false;
             if (dictionary.ContainsKey(pair.Key))
             {
-                HashSet<V> values = dictionary[pair.Key];
+                SortedSet<V> values = dictionary[pair.Key];
                 isContains = values.Contains(pair.Value);
             }
             return isContains;
@@ -98,13 +97,13 @@ namespace NGuava
 
             if (dictionary.ContainsKey(key))
             {
-                HashSet<V> values = dictionary[key];
+                SortedSet<V> values = dictionary[key];
                 values.Add(value);
 
             }
             else
             {
-                HashSet<V> values = new HashSet<V>();
+                SortedSet<V> values = new SortedSet<V>();
                 values.Add(value);
                 dictionary.Add(key, values);
             }
@@ -144,7 +143,7 @@ namespace NGuava
             Preconditions.CheckNotNullArgument(key, "key is null");
             if (dictionary.ContainsKey(key))
             {
-                HashSet<V> values = dictionary[key];
+                SortedSet<V> values = dictionary[key];
                 values.Remove(value);
                 RemovePairIfValuesIsEmpty(key, values);
                 CountPairs = CountPairs - 1;
@@ -162,7 +161,7 @@ namespace NGuava
             Preconditions.CheckNotNullArgument(key, "key is null .");
             if (dictionary.ContainsKey(key))
             {
-                HashSet<V> values = dictionary[key];
+                SortedSet<V> values = dictionary[key];
                 CountPairs = CountPairs - values.Count;
                 dictionary.Remove(key);
             }
@@ -217,7 +216,7 @@ namespace NGuava
             return dictionary.GetHashCode()  ^ amountOfPairs.GetHashCode();
         }
 
-        private void RemovePairIfValuesIsEmpty(K key, HashSet<V> values)
+        private void RemovePairIfValuesIsEmpty(K key, SortedSet<V> values)
         {
             if (values.Count == 0)
             {

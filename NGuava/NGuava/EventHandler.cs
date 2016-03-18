@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace NGuava
 {
@@ -9,7 +10,7 @@ namespace NGuava
     /// Two EventHandlers are equavelent when they refer the same method on the same instance.
     /// The MethodInfo is a flyweight object similar to String each MethodInfo on a class is uniqueuely formed with the same hashcode.
     /// </summary>
-    public class EventHandler
+    public class EventHandler : IComparer<EventHandler>
     {
         /// <summary>
         /// The target object is the object  which the method will be invoked on.
@@ -20,16 +21,21 @@ namespace NGuava
         /// </summary>
         private readonly MethodInfo method;
         /// <summary>
+        /// Priority of handler. Higher priority handlers will be called first
+        /// </summary>
+        private readonly int priority;
+        /// <summary>
         /// Constructor that gets target object and method to be invoked on.
         /// </summary>
         /// <param name="target">target that the method is invoked on.</param>
         /// <param name="method">Method of the target object.</param>
-        public EventHandler(Object target, MethodInfo method)
+        public EventHandler(Object target, MethodInfo method, int priority)
         {
             Preconditions.CheckNotNull(target, "EventHandler target can not be null .");
             Preconditions.CheckNotNull(method, "EventHandler method can not be null .");
             this.target = target;
             this.method = method;
+            this.priority = priority;
         }
         /// <summary>
         /// HandleEvent is invoking the method on the target method with the @event as parameter of the method.
@@ -44,27 +50,27 @@ namespace NGuava
             }
             catch (ArgumentException eArgument)
             {
-               
+                Console.WriteLine(eArgument.Message);
             }
             catch (TargetException eTarget)
             {
-
+                Console.WriteLine(eTarget.Message);
             }
             catch (TargetParameterCountException eTargetParameter)
             {
-
+                Console.WriteLine(eTargetParameter.Message);
             }
             catch (MethodAccessException eMethodAcces)
             {
-
+                Console.WriteLine(eMethodAcces.Message);
             }
             catch (InvalidOperationException eInvalidOperation)
             {
-
+                Console.WriteLine(eInvalidOperation.Message);
             }
             catch (TargetInvocationException eTargetInvocation)
             {
-
+                Console.WriteLine(eTargetInvocation.Message);
             }
             //the NotSupportedException is not checked.
 
@@ -105,6 +111,17 @@ namespace NGuava
         public override int GetHashCode()
         {
             return method.GetHashCode() ^ target.GetHashCode();
+        }
+
+        /// <summary>
+        /// Compare method to be able to sort EventHandlers by priority
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public int Compare(EventHandler x, EventHandler y)
+        {
+            return x.priority.CompareTo(y.priority);
         }
     }
 }
